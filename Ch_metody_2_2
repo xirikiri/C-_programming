@@ -1,0 +1,59 @@
+// Chisl_met_6sem_2_2.cpp: определяет точку входа для консольного приложения.
+//Bogatyrev Ilia Sergeevich KMBO-03-14
+////////////////////////////////////////////////////////////////////////////
+//16x1-9x2=-27
+//8x1-13x2-5x3=-84
+//-3x2-21x3+9x4=-225
+//-9x3+16x4-5x5=-89
+//x4-9x5=69
+
+#include "stdafx.h"
+#include <iostream>
+
+using namespace std;
+
+void progonka(double *a, double *b, double *c, double *d, double *P, double *Q, double *roots, int n);
+int main()
+{
+	int n = 5;
+	double *a = new double[n];
+	double *b = new double[n];
+	double *c = new double[n];
+	double *d = new double[n];
+	double *roots = new double[n];
+	double *P = new double[n];
+	double *Q = new double[n];
+	//Значения матрицы
+	a[0] = 0; a[1] = 8; a[2] = -3; a[3] = -9; a[4] = 1;
+	b[0] = 16; b[1] = -13; b[2] = -21; b[3] = 16; b[4] = -9;
+	c[0] = -9; c[1] = -5; c[2] = 9; c[3] = -5; c[4] = 0;
+	d[0] = -27; d[1] = -84; d[2] = -225; d[3] = -89; d[4] = 69;
+	//
+	progonka(a, b, c, d, P, Q, roots, n);
+	cout << "Korni:" << endl;
+
+	for (int i = 0; i < n; i++)
+	{
+		int temp = roots[i];
+		cout << temp << " ";
+	}
+    return 0;
+}
+void progonka(double *a, double *b, double *c, double *d, double *P, double *Q, double *roots, int n)
+{
+	P[0] = -c[0] / b[0];
+	Q[0] = d[0] / b[0];
+	for (int i = 1; i < (n-1); i++)
+	{
+		P[i] = -c[i] / (b[i] + a[i] * P[i - 1]);
+		Q[i] = (d[i] - a[i] * Q[i - 1]) / (b[i] + a[i] * P[i - 1]);
+	}
+	P[n-1] = 0;
+	Q[n-1] = (d[n-1] - a[n-1] * Q[n - 2]) / (b[n-1] + a[n-1] * P[n - 2]);	
+	//roots[n-1] = Q[n-1];
+	for (int i = n-1; i >= 0 ;i--)
+	{
+		roots[i] = P[i] * roots[i + 1] + Q[i];
+	}
+
+}
